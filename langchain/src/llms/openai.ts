@@ -118,6 +118,8 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
 
   timeout?: number;
 
+  maxRetries?: number;
+
   stop?: string[];
 
   user?: string;
@@ -201,6 +203,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     this.modelKwargs = fields?.modelKwargs ?? {};
     this.batchSize = fields?.batchSize ?? this.batchSize;
     this.timeout = fields?.timeout;
+    this.maxRetries = fields?.maxRetries ?? this.maxRetries;
 
     this.temperature = fields?.temperature ?? this.temperature;
     this.maxTokens = fields?.maxTokens ?? this.maxTokens;
@@ -523,7 +526,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
         ...this.clientConfig,
         baseURL: endpoint,
         timeout: this.timeout,
-        maxRetries: 0,
+        maxRetries: this.maxRetries ?? 0,
       };
 
       if (!params.baseURL) {

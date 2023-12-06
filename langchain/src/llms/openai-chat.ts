@@ -118,6 +118,8 @@ export class OpenAIChat
 
   timeout?: number;
 
+  maxRetries?: number;
+
   stop?: string[];
 
   user?: string;
@@ -190,6 +192,7 @@ export class OpenAIChat
     this.prefixMessages = fields?.prefixMessages ?? this.prefixMessages;
     this.modelKwargs = fields?.modelKwargs ?? {};
     this.timeout = fields?.timeout;
+    this.maxRetries = fields?.maxRetries;
 
     this.temperature = fields?.temperature ?? this.temperature;
     this.topP = fields?.topP ?? this.topP;
@@ -437,7 +440,7 @@ export class OpenAIChat
         ...this.clientConfig,
         baseURL: endpoint,
         timeout: this.timeout,
-        maxRetries: 0,
+        maxRetries: this.maxRetries ?? 0,
       };
       if (!params.baseURL) {
         delete params.baseURL;

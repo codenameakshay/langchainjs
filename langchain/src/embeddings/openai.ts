@@ -24,6 +24,11 @@ export interface OpenAIEmbeddingsParams extends EmbeddingsParams {
   timeout?: number;
 
   /**
+   * The maximum number of times to retry a request to OpenAI. Defaults to 0.
+   */
+  maxRetries?: number;
+
+  /**
    * The maximum number of documents to embed in a single request. This is
    * limited by the OpenAI API to a maximum of 2048.
    */
@@ -62,6 +67,8 @@ export class OpenAIEmbeddings
   stripNewLines = true;
 
   timeout?: number;
+
+  maxRetries?: number;
 
   azureOpenAIApiVersion?: string;
 
@@ -131,6 +138,7 @@ export class OpenAIEmbeddings
     this.stripNewLines =
       fieldsWithDefaults?.stripNewLines ?? this.stripNewLines;
     this.timeout = fieldsWithDefaults?.timeout;
+    this.maxRetries = fieldsWithDefaults?.maxRetries;
 
     this.azureOpenAIApiVersion = azureApiVersion;
     this.azureOpenAIApiKey = azureApiKey;
@@ -233,7 +241,7 @@ export class OpenAIEmbeddings
         ...this.clientConfig,
         baseURL: endpoint,
         timeout: this.timeout,
-        maxRetries: 0,
+        maxRetries: this.maxRetries ?? 0,
       };
 
       if (!params.baseURL) {
